@@ -1,0 +1,67 @@
+import React, { useState } from 'react';
+import { TextField, Button, Container, Typography, CssBaseline } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.1)',
+    padding: theme.spacing(3),
+    borderRadius: '8px',
+    backgroundColor: '#fff',
+  },
+}));
+
+const RegistrationPage = () => {
+  const classes = useStyles();
+
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleRegister = () => {
+    // Add your registration logic here
+    // You might want to send the data to a server using APIs
+  };
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.root}>
+        <Typography variant="h4">Register</Typography>
+        <TextField
+          label="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+        <Button variant="contained" color="primary" onClick={handleRegister}>
+          Register
+        </Button>
+      </div>
+    </Container>
+  );
+};
+
+export default RegistrationPage;
+
+￼Enter
