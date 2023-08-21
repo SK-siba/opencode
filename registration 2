@@ -1,0 +1,315 @@
+import React, { useState } from 'react';
+import { TextField, Button, Container, Typography, CssBaseline, RadioGroup, Radio, FormControlLabel, FormControl, FormLabel } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    marginTop: theme.spacing(8),
+    marginBottom: theme.spacing(3),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.1)',
+    padding: theme.spacing(3),
+    borderRadius: '8px',
+    backgroundColor: '#fff',
+  },
+  genderGroup: {
+    flexDirection: 'row',
+  },
+}));
+
+const RegistrationPage = () => {
+  const classes = useStyles();
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [designation, setDesignation] = useState('');
+  const [department, setDepartment] = useState('');
+  const [password, setPassword] = useState('');
+  const [dob, setDOB] = useState('');
+  const [doj, setDOJ] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [gender, setGender] = useState('male');
+
+  const [firstNameError, setFirstNameError] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [designationError, setDesignationError] = useState('');
+  const [departmentError, setDepartmentError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [dobError, setDOBError] = useState('');
+  const [dojError, setDOJError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  const [emailError, setEmailError] = useState('');
+
+  const handleRegister = () => {
+    // Reset existing errors
+    setFirstNameError('');
+    setLastNameError('');
+    setDesignationError('');
+    setDepartmentError('');
+    setPasswordError('');
+    setDOBError('');
+    setDOJError('');
+    setPhoneError('');
+    setEmailError('');
+
+    // Basic validation
+    let valid = true;
+
+    if (!firstName) {
+      setFirstNameError('First Name is required');
+      valid = false;
+    }
+
+    if (!lastName) {
+      setLastNameError('Last Name is required');
+      valid = false;
+    }
+
+    // ... (other fields' validation)
+
+    if (valid) {
+      // Perform registration logic here
+      // You can send the registration data to a server using APIs
+      console.log('Registration successful');
+    }
+  };
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.root}>
+        <Typography variant="h4">Register</Typography>
+        <TextField
+          label="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!firstNameError}
+          helperText={firstNameError}
+        />
+        <TextField
+          label="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!lastNameError}
+          helperText={lastNameError}
+        />
+        <TextField
+          label="Designation"
+          value={designation}
+          onChange={(e) => setDesignation(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!designationError}
+          helperText={designationError}
+        />
+        <TextField
+          label="Department"
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!departmentError}
+          helperText={departmentError}
+import React, { useState } from 'react';
+import { TextField, Button, Container, Typography, CssBaseline, RadioGroup, Radio, FormControlLabel, FormControl, FormLabel } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    marginTop: theme.spacing(8),
+    marginBottom: theme.spacing(3),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.1)',
+    padding: theme.spacing(3),
+    borderRadius: '8px',
+    backgroundColor: '#fff',
+  },
+  genderGroup: {
+    flexDirection: 'row',
+  },
+}));
+
+const RegistrationPage = () => {
+  const classes = useStyles();
+
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [designation, setDesignation] = useState('');
+  const [department, setDepartment] = useState('');
+  const [password, setPassword] = useState('');
+  const [dob, setDOB] = useState('');
+  const [doj, setDOJ] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [gender, setGender] = useState('male');
+
+  const [firstNameError, setFirstNameError] = useState('');
+  const [lastNameError, setLastNameError] = useState('');
+  const [designationError, setDesignationError] = useState('');
+  const [departmentError, setDepartmentError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [dobError, setDOBError] = useState('');
+  const [dojError, setDOJError] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  const [emailError, setEmailError] = useState('');
+
+  const handleRegister = () => {
+    // Reset existing errors
+    setFirstNameError('');
+    setLastNameError('');
+    setDesignationError('');
+    setDepartmentError('');
+    setPasswordError('');
+    setDOBError('');
+    setDOJError('');
+    setPhoneError('');
+    setEmailError('');
+
+    // Basic validation
+    let valid = true;
+
+    if (!firstName) {
+      setFirstNameError('First Name is required');
+      valid = false;
+    }
+
+    if (!lastName) {
+      setLastNameError('Last Name is required');
+      valid = false;
+    }
+
+    // ... (other fields' validation)
+
+    if (valid) {
+      // Perform registration logic here
+      // You can send the registration data to a server using APIs
+      console.log('Registration successful');
+    }
+  };
+
+  return (
+    <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div className={classes.root}>
+        <Typography variant="h4">Register</Typography>
+        <TextField
+          label="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!firstNameError}
+          helperText={firstNameError}
+        />
+        <TextField
+          label="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!lastNameError}
+          helperText={lastNameError}
+        />
+        <TextField
+          label="Designation"
+          value={designation}
+          onChange={(e) => setDesignation(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!designationError}
+          helperText={designationError}
+        />
+        <TextField
+          label="Department"
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!departmentError}
+          helperText={departmentError}
+        />
+        <TextField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!passwordError}
+          helperText={passwordError}
+        />
+        <TextField
+          label="Date of Birth"
+          type="date"
+          value={dob}
+          onChange={(e) => setDOB(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!dobError}
+          helperText={dobError}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        <TextField
+          label="Date of Joining"
+          type="date"
+          value={doj}
+          onChange={(e) => setDOJ(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!dojError}
+          helperText={dojError}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        <TextField
+          label="Phone Number"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!phoneError}
+          helperText={phoneError}
+        />
+        <TextField
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          fullWidth
+          margin="normal"
+          error={!!emailError}
+          helperText={emailError}
+        />
+        <FormControl component="fieldset">
+          <FormLabel component="legend">Gender</FormLabel>
+          <RadioGroup
+            className={classes.genderGroup}
+            aria-label="gender"
+            name="gender"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+          >
+            <FormControlLabel value="male" control={<Radio />} label="Male" />
+            <FormControlLabel value="female" control={<Radio />} label="Female" />
+            <FormControlLabel value="other" control={<Radio />} label="Other" />
+          </RadioGroup>
+        </FormControl>
+        <Button variant="contained" color="primary" onClick={handleRegister}>
+          Register
+        </Button>
+      </div>
+    </Container>
+  );
+};
+
