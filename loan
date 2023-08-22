@@ -1,0 +1,196 @@
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import ApiService from '../service/ApiService';
+
+const LoanCard = ({ loan, onDelete, onUpdate }) => {
+  const [openDetails, setOpenDetails] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editedLoan, setEditedLoan] = useState({ ...loan });
+
+  const handleDelete = () => {
+    onDelete(loan.id);
+  };
+
+  const handleOpenDetails = () => {
+    setOpenDetails(true);
+  };
+
+  const handleCloseDetails = () => {
+    setOpenDetails(false);
+  };
+
+  const handleOpenEdit = () => {
+    setOpenEdit(true);
+  };
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const handleUpdate = () => {
+    onUpdate(editedLoan);
+    setOpenEdit(false);
+  };
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import ApiService from '../service/ApiService';
+
+const LoanCard = ({ loan, onDelete, onUpdate }) => {
+  const [openDetails, setOpenDetails] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editedLoan, setEditedLoan] = useState({ ...loan });
+
+  const handleDelete = () => {
+    onDelete(loan.id);
+  };
+
+  const handleOpenDetails = () => {
+    setOpenDetails(true);
+  };
+
+  const handleCloseDetails = () => {
+    setOpenDetails(false);
+  };
+
+  const handleOpenEdit = () => {
+    setOpenEdit(true);
+  };
+
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const handleUpdate = () => {
+    onUpdate(editedLoan);
+    setOpenEdit(false);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedLoan((prevLoan) => ({
+      ...prevLoan,
+      [name]: value,
+    }));
+  };
+
+  return (
+    <Card>
+      <CardContent>
+        <p>{loan.name}</p>
+        {/* Display other loan fields */}
+        <Button onClick={handleOpenDetails}>View</Button>
+        <Button onClick={handleOpenEdit}>Edit</Button>
+        <Button onClick={handleDelete}>Delete</Button>
+      </CardContent>
+
+      {/* View Details Popup */}
+      <Dialog open={openDetails} onClose={handleCloseDetails}>
+        <DialogTitle>Loan Details</DialogTitle>
+        <DialogContent>
+          {/* Display loan details */}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDetails}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Edit Popup */}
+      <Dialog open={openEdit} onClose={handleCloseEdit}>
+        <DialogTitle>Edit Loan</DialogTitle>
+        <DialogContent>
+          <TextField label="Name" name="name" value={editedLoan.name} onChange={handleInputChange} />
+          {/* Add other fields for editing */}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleUpdate}>Save</Button>
+          <Button onClick={handleCloseEdit}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+    </Card>
+  );
+};
+
+const LoanPage = () => {
+  const [loans, setLoans] = useState([]);
+
+  useEffect(() => {
+    // Fetch loan data using your API service
+    ApiService.getLoans().then((data) => setLoans(data));
+  }, []);
+
+  const handleDeleteLoan = (loanId) => {
+    // Delete loan using your API service
+    ApiService.deleteLoan(loanId).then(() => {
+      setLoans(loans.filter((loan) => loan.id !== loanId));
+    });
+  };
+
+  const handleUpdateLoan = (updatedLoan) => {
+    // Update loan using your API service
+    ApiService.updateLoan(updatedLoan).then(() => {
+      setLoans((prevLoans) => prevLoans.map((loan) => (loan.id === updatedLoan.id ? updatedLoan : loan)));
+    });
+  };
+
+  return (
+    <div>
+      {loans.map((loan) => (
+        <LoanCard key={loan.id} loan={loan} onDelete={handleDeleteLoan} onUpdate={handleUpdateLoan} />
+      ))}
+    </div>
+  );
+};
+
+export default LoanPage;
+￼Enter
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedLoan((prevLoan) => ({
+      ...prevLoan,
+      [name]: value,
+    }));
+  };
+
+  return (
+    <Card>
+      <CardContent>
+        <p>{loan.name}</p>
+        {/* Display other loan fields */}
+        <Button onClick={handleOpenDetails}>View</Button>
+        <Button onClick={handleOpenEdit}>Edit</Button>
+        <Button onClick={handleDelete}>Delete</Button>
+      </CardContent>
+
+      {/* View Details Popup */}
+      <Dialog open={openDetails} onClose={handleCloseDetails}>
+        <DialogTitle>Loan Details</DialogTitle>
+        <DialogContent>
+          {/* Display loan details */}
+        </DialogContent>
+        <DialogActions>
+    <Button onClick={handleCloseDetails}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Edit Popup */}
+      <Dialog open={openEdit} onClose={handleCloseEdit}>
+        <DialogTitle>Edit Loan</DialogTitle>
+        <DialogContent>
+          <TextField label="Name" name="name" value={editedLoan.name} onChange={handleInputChange} />
+          {/* Add other fields for editing */}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleUpdate}>Save</Button>
+          <Button onClick={handleCloseEdit}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+    </Card>
+  );
+};
+
+const LoanPage = () => {
+  const [loans, setLoans] = useState([]);
+
+  useEffect(() => {
+    // Fetch loan data using your API service
+    ApiService.getLoans().then((data) => setLoans(data));
