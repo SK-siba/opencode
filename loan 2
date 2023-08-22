@@ -9,149 +9,113 @@ import {
   DialogActions,
   TextField,
   Typography,
-  Box,
-  Divider,
+  Grid,
+  IconButton,
+  Paper,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ViewIcon from '@mui/icons-material/Visibility';
 
 const useStyles = makeStyles({
-  card: {
-    marginBottom: '16px',
-    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-    borderRadius: '8px',
+  root: {
+    padding: '20px',
   },
-  cardContent: {
+  card: {
+    margin: '10px 0',
+    padding: '20px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  details: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    padding: '16px',
+    gap: '10px',
   },
   actions: {
     display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '8px',
+    gap: '10px',
   },
-  popupBox: {
-    padding: '16px',
+  buttonGroup: {
+    marginTop: '20px',
+    display: 'flex',
+    justifyContent: 'flex-end',
   },
-  popupContent: {
+  dialogContent: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '8px',
+    gap: '20px',
   },
 });
 
-const LoanCard = ({ loan, onDelete, onUpdate }) => {
+const LoanCard = ({ loan, onEdit, onDelete, onView }) => {
   const classes = useStyles();
-  const [openDetails, setOpenDetails] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [editedLoan, setEditedLoan] = useState({ ...loan });
+  const [openDialog, setOpenDialog] = useState(false);
 
-  const handleDelete = () => {
-    onDelete(loan.id);
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
   };
 
-  const handleOpenDetails = () => {
-    setOpenDetails(true);
-  };
-
-  const handleCloseDetails = () => {
-    setOpenDetails(false);
-  };
-
-  const handleOpenEdit = () => {
-    setOpenEdit(true);
-  };
-
-  const handleCloseEdit = () => {
-    setOpenEdit(false);
-  };
-
-  const handleUpdate = () => {
-    onUpdate(editedLoan);
-    setOpenEdit(false);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedLoan((prevLoan) => ({
-      ...prevLoan,
-      [name]: value,
-    }));
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
 
   return (
-    <Card className={classes.card}>
-      <CardContent className={classes.cardContent}>
-        <Typography variant="h6" color="primary">
-          {loan.name}
-        </Typography>
-        <Divider />
-        <Typography variant="body1">Amount: ${loan.amount}</Typography>
-        <Typography variant="body1">Interest Rate: {loan.interestRate}%</Typography>
-      </CardContent>
+    <>
+      <Card className={classes.card} elevation={3}>
+        <div className={classes.details}>
+          <Typography variant="h6" color="primary">
+            Loan ID: {loan.id}
+          </Typography>
+          <Typography variant="body1">
+            Loan Type: {loan.type}
+          </Typography>
+          <Typography variant="body1">
+            Loan Duration: {loan.duration}
+          </Typography>
+        </div>
+        <div className={classes.actions}>
+          <IconButton onClick={() => onView(loan)}>
+            <ViewIcon />
+          </IconButton>
+          <IconButton onClick={() => onEdit(loan)}>
+            <EditIcon />
+          </IconButton>
+          <IconButton onClick={() => onDelete(loan.id)}>
+            <DeleteIcon />
+          </IconButton>
+        </div>
+      </Card>
 
-      <div className={classes.actions}>
-        <Button size="small" variant="outlined" onClick={handleOpenDetails}>
-          View Details
-        </Button>
-        <Button size="small" variant="outlined" onClick={handleOpenEdit}>
-          Edit
-        </Button>
-        <Button size="small" variant="outlined" onClick={handleDelete}>
-          Delete
-        </Button>
-      </div>
-
-      {/* View Details Popup */}
-      <Dialog open={openDetails} onClose={handleCloseDetails}>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Loan Details</DialogTitle>
-        <DialogContent className={classes.popupBox}>
-          <Box className={classes.popupContent}>
-            <Typography variant="h6" color="primary">
-              {loan.name}
-            </Typography>
-            <Divider />
-            <Typography variant="body1">Amount: ${loan.amount}</Typography>
-            <Typography variant="body1">Interest Rate: {loan.interestRate}%</Typography>
-            {/* Add more details */}
-          </Box>
+        <DialogContent className={classes.dialogContent}>
+          <Typography variant="body1">
+            Loan ID: {loan.id}
+          </Typography>
+          <Typography variant="body1">
+            Loan Type: {loan.type}
+          </Typography>
+          <Typography variant="body1">
+            Loan Duration: {loan.duration}
+          </Typography>
+          {/* Add more loan details here */}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDetails}>Close</Button>
+          <Button onClick={handleCloseDialog}>Close</Button>
         </DialogActions>
       </Dialog>
-
-      {/* Edit Popup */}
-      <Dialog open={openEdit} onClose={handleCloseEdit}>
-        <DialogTitle>Edit Loan</DialogTitle>
-        <DialogContent>
-          <Box className={classes.popupContent}>
-            <TextField
-              label="Name"
-              name="name"
-              value={editedLoan.name}
-              onChange={handleInputChange}
-              fullWidth
-              variant="outlined"
-            />
-            {/* Add other fields for editing */}
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleUpdate}>Save</Button>
-          <Button onClick={handleCloseEdit}>Cancel</Button>
-        </DialogActions>
-      </Dialog>
-    </Card>
+    </>
   );
 };
 
 const Loans = () => {
   const sampleLoans = [
-    { id: 1, name: 'Loan A', amount: 1000, interestRate: 5 },
-    { id: 2, name: 'Loan B', amount: 2000, interestRate: 3 },
-    { id: 3, name: 'Loan C', amount: 1500, interestRate: 4 },
+    { id: 1, type: 'Personal Loan', duration: '12 months' },
+    { id: 2, type: 'Home Loan', duration: '24 months' },
+    // Add more sample loans
   ];
 
   const [loans, setLoans] = useState(sampleLoans);
@@ -160,18 +124,31 @@ const Loans = () => {
     setLoans(loans.filter((loan) => loan.id !== loanId));
   };
 
-  const handleUpdateLoan = (updatedLoan) => {
-    setLoans((prevLoans) =>
-      prevLoans.map((loan) => (loan.id === updatedLoan.id ? updatedLoan : loan))
-    );
+  const handleEditLoan = (loan) => {
+    // Implement edit logic here
+  };
+
+  const handleViewLoan = (loan) => {
+    // Implement view logic here
   };
 
   return (
-    <Box>
-      {loans.map((loan) => (
-        <LoanCard key={loan.id} loan={loan} onDelete={handleDeleteLoan} onUpdate={handleUpdateLoan} />
-      ))}
-    </Box>
+    <div className={classes.root}>
+      <Button variant="contained" color="primary">
+        Add New Loan
+      </Button>
+      <div>
+        {loans.map((loan) => (
+          <LoanCard
+            key={loan.id}
+            loan={loan}
+            onDelete={handleDeleteLoan}
+            onEdit={handleEditLoan}
+            onView={handleViewLoan}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 
