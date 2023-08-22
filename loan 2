@@ -16,7 +16,7 @@ import {
   TableRow,
   TextField,
   Typography,
-} from '@material-ui/core';
+} from '@mui/material';
 
 function Loans() {
   const [loans, setLoans] = useState([
@@ -156,7 +156,6 @@ function Loans() {
       <Dialog open={openViewModal} onClose={handleCloseViewModal}>
         <DialogTitle>Loan Details</DialogTitle>
         <DialogContent>
-          {/* Display selectedLoan details */}
           {selectedLoan && (
             <div>
               <p>ID: {selectedLoan.id}</p>
@@ -176,7 +175,6 @@ function Loans() {
       <Dialog open={openEditModal} onClose={handleCloseEditModal}>
         <DialogTitle>Edit Loan</DialogTitle>
         <DialogContent>
-          {/* Edit form fields for selectedLoan */}
           {selectedLoan && (
             <div>
               <TextField
