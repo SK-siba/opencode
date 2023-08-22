@@ -58,66 +58,6 @@ const LoanCard = ({ loan, onDelete, onUpdate }) => {
     setEditedLoan((prevLoan) => ({
       ...prevLoan,
       [name]: value,
-import React, { useState } from 'react';
-import { Card, CardContent, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Box } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles({
-  card: {
-    marginBottom: '16px',
-    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
-  },
-  cardContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-  actions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '8px',
-  },
-  popupBox: {
-    padding: '16px',
-  },
-});
-
-const LoanCard = ({ loan, onDelete, onUpdate }) => {
-  const classes = useStyles();
-  const [openDetails, setOpenDetails] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [editedLoan, setEditedLoan] = useState({ ...loan });
-
-  const handleDelete = () => {
-    onDelete(loan.id);
-  };
-
-  const handleOpenDetails = () => {
-    setOpenDetails(true);
-  };
-
-  const handleCloseDetails = () => {
-    setOpenDetails(false);
-  };
-
-  const handleOpenEdit = () => {
-    setOpenEdit(true);
-  };
-
-  const handleCloseEdit = () => {
-    setOpenEdit(false);
-  };
-
-  const handleUpdate = () => {
-    onUpdate(editedLoan);
-    setOpenEdit(false);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedLoan((prevLoan) => ({
-      ...prevLoan,
-      [name]: value,
     }));
   };
 
@@ -196,4 +136,3 @@ const Loans = () => {
 };
 
 export default Loans;
-  
