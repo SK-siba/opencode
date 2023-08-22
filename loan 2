@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -22,17 +22,26 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import LoanService from './LoanService'; // Import the LoanService component
 
 function Loans() {
-  const [loans, setLoans] = useState([
-    { id: 1, type: 'Home Loan', duration: '30 years' },
-    // Add more loan data
-  ]);
-
+  const [loans, setLoans] = useState([]);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null);
   const [newLoan, setNewLoan] = useState({ id: '', type: '', duration: '' });
+
+  useEffect(() => {
+    async function fetchLoans() {
+      try {
+        const fetchedLoans = await LoanService.getAllLoans();
+        setLoans(fetchedLoans);
+      } catch (error) {
+        console.error('Error fetching loans:', error);
+      }
+    }
+    fetchLoans();
+  }, []);
 
   const handleOpenAddModal = () => {
     setOpenAddModal(true);
@@ -43,9 +52,14 @@ function Loans() {
     setNewLoan({ id: '', type: '', duration: '' });
   };
 
-  const handleAddLoan = () => {
-    setLoans([...loans, newLoan]);
-    handleCloseAddModal();
+  const handleAddLoan = async () => {
+    try {
+      const addedLoan = await LoanService.addLoan(newLoan);
+      setLoans([...loans, addedLoan]);
+      handleCloseAddModal();
+    } catch (error) {
+      console.error('Error adding loan:', error);
+    }
   };
 
   const handleOpenEditModal = (loan) => {
@@ -58,18 +72,28 @@ function Loans() {
     setOpenEditModal(false);
   };
 
-  const handleEditLoan = () => {
-    const updatedLoans = loans.map((loan) =>
-      loan.id === selectedLoan.id ? { ...loan, ...selectedLoan } : loan
-    );
-    setLoans(updatedLoans);
-    handleCloseEditModal();
+  const handleEditLoan = async () => {
+    try {
+      const editedLoan = await LoanService.editLoan(selectedLoan);
+      const updatedLoans = loans.map((loan) =>
+        loan.id === editedLoan.id ? editedLoan : loan
+      );
+      setLoans(updatedLoans);
+      handleCloseEditModal();
+    } catch (error) {
+      console.error('Error editing loan:', error);
+    }
   };
 
-  const handleDeleteLoan = (loanId) => {
-    const updatedLoans = loans.filter((loan) => loan.id !== loanId);
-    setLoans(updatedLoans);
-    alert('Loan deleted successfully');
+  const handleDeleteLoan = async (loanId) => {
+    try {
+      await LoanService.deleteLoan(loanId);
+      const updatedLoans = loans.filter((loan) => loan.id !== loanId);
+      setLoans(updatedLoans);
+      // Show alert or notification
+    } catch (error) {
+      console.error('Error deleting loan:', error);
+    }
   };
 
   return (
@@ -128,18 +152,21 @@ function Loans() {
             <TextField
               label="ID"
               fullWidth
+              margin="dense"
               value={newLoan.id}
               onChange={(e) => setNewLoan({ ...newLoan, id: e.target.value })}
             />
             <TextField
               label="Type"
               fullWidth
+              margin="dense"
               value={newLoan.type}
               onChange={(e) => setNewLoan({ ...newLoan, type: e.target.value })}
             />
             <TextField
               label="Duration"
               fullWidth
+              margin="dense"
               value={newLoan.duration}
               onChange={(e) =>
                 setNewLoan({ ...newLoan, duration: e.target.value })
@@ -165,6 +192,7 @@ function Loans() {
             <TextField
               label="ID"
               fullWidth
+              margin="dense"
               value={selectedLoan ? selectedLoan.id : ''}
               onChange={(e) =>
                 setSelectedLoan({ ...selectedLoan, id: e.target.value })
@@ -173,6 +201,7 @@ function Loans() {
             <TextField
               label="Type"
               fullWidth
+              margin="dense"
               value={selectedLoan ? selectedLoan.type : ''}
               onChange={(e) =>
                 setSelectedLoan({ ...selectedLoan, type: e.target.value })
@@ -181,6 +210,7 @@ function Loans() {
             <TextField
               label="Duration"
               fullWidth
+              margin="dense"
               value={selectedLoan ? selectedLoan.duration : ''}
               onChange={(e) =>
                 setSelectedLoan({ ...selectedLoan, duration: e.target.value })
