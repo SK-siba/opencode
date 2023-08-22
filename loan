@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Box } from '@mui/material';
+import { Card, CardContent, Button, Dialog, DialogTitle, DialogContent, DialogActions, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   card: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: '16px',
-    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
     marginBottom: '16px',
+    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
   },
-  actions: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginTop: '16px',
+  table: {
+    minWidth: 650,
+  },
+  popupBox: {
+    padding: '16px',
   },
 });
 
@@ -60,29 +57,57 @@ const LoanCard = ({ loan, onDelete, onUpdate }) => {
   return (
     <Card className={classes.card}>
       <CardContent>
-        <Box>
-          <p>{loan.name}</p>
-          <p>Amount: ${loan.amount}</p>
-          <p>Interest Rate: {loan.interestRate}%</p>
-        </Box>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} size="small" aria-label="loan table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell align="right">Amount</TableCell>
+                <TableCell align="right">Interest Rate</TableCell>
+                <TableCell align="right">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow key={loan.id}>
+                <TableCell component="th" scope="row">
+                  {loan.name}
+                </TableCell>
+                <TableCell align="right">${loan.amount}</TableCell>
+                <TableCell align="right">{loan.interestRate}%</TableCell>
+                <TableCell align="right">
+                  <Button onClick={handleOpenDetails}>View</Button>
+                  <Button onClick={handleOpenEdit}>Edit</Button>
+                  <Button onClick={handleDelete}>Delete</Button>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
       </CardContent>
-
-      <div className={classes.actions}>
-        <Button onClick={handleOpenDetails}>View</Button>
-        <Button onClick={handleOpenEdit}>Edit</Button>
-        <Button onClick={handleDelete}>Delete</Button>
-      </div>
 
       {/* View Details Popup */}
       <Dialog open={openDetails} onClose={handleCloseDetails}>
         <DialogTitle>Loan Details</DialogTitle>
-        <DialogContent>
-          <Box>
-            <p>Name: {loan.name}</p>
-            <p>Amount: ${loan.amount}</p>
-            <p>Interest Rate: {loan.interestRate}%</p>
-            {/* Add more details */}
-          </Box>
+        <DialogContent className={classes.popupBox}>
+          <TableContainer component={Paper}>
+            <Table className={classes.table} size="small" aria-label="loan details table">
+              <TableBody>
+                <TableRow>
+                  <TableCell>Name:</TableCell>
+                  <TableCell>{loan.name}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Amount:</TableCell>
+                  <TableCell>${loan.amount}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Interest Rate:</TableCell>
+                  <TableCell>{loan.interestRate}%</TableCell>
+                </TableRow>
+                {/* Add more loan details */}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDetails}>Close</Button>
