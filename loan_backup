@@ -1,0 +1,208 @@
+import React, { useState } from 'react';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Fab,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+  IconButton,
+  Tooltip,
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+function Loans() {
+  const [loans, setLoans] = useState([
+    { id: 1, type: 'Home Loan', duration: '30 years' },
+    // Add more loan data
+  ]);
+
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [selectedLoan, setSelectedLoan] = useState(null);
+  const [newLoan, setNewLoan] = useState({ id: '', type: '', duration: '' });
+
+  const handleOpenAddModal = () => {
+    setOpenAddModal(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setOpenAddModal(false);
+    setNewLoan({ id: '', type: '', duration: '' });
+  };
+
+  const handleAddLoan = () => {
+    setLoans([...loans, newLoan]);
+    handleCloseAddModal();
+  };
+
+  const handleOpenEditModal = (loan) => {
+    setSelectedLoan(loan);
+    setOpenEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setSelectedLoan(null);
+    setOpenEditModal(false);
+  };
+
+  const handleEditLoan = () => {
+    const updatedLoans = loans.map((loan) =>
+      loan.id === selectedLoan.id ? { ...loan, ...selectedLoan } : loan
+    );
+    setLoans(updatedLoans);
+    handleCloseEditModal();
+  };
+
+  const handleDeleteLoan = (loanId) => {
+    const updatedLoans = loans.filter((loan) => loan.id !== loanId);
+    setLoans(updatedLoans);
+    alert('Loan deleted successfully');
+  };
+
+  return (
+    <Box m={3}>
+      <Typography variant="h4" gutterBottom>
+        Loans
+      </Typography>
+      <Fab color="primary" onClick={handleOpenAddModal} aria-label="add" size="small">
+        <AddIcon />
+      </Fab>
+      <TableContainer component={Paper} style={{ marginTop: '20px' }}>
+        <Table aria-label="loans table">
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Duration</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {loans.map((loan) => (
+              <TableRow key={loan.id}>
+                <TableCell>{loan.id}</TableCell>
+                <TableCell>{loan.type}</TableCell>
+                <TableCell>{loan.duration}</TableCell>
+                <TableCell>
+                  <Tooltip title="Edit">
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleOpenEditModal(loan)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Delete">
+                    <IconButton
+                      color="secondary"
+                      onClick={() => handleDeleteLoan(loan.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {/* Add Loan Modal */}
+      <Dialog open={openAddModal} onClose={handleCloseAddModal}>
+        <DialogTitle>Add New Loan</DialogTitle>
+        <DialogContent>
+          <Box display="flex" flexDirection="column" gap={2}>
+            <TextField
+              label="ID"
+              fullWidth
+              margin="dense"
+              value={newLoan.id}
+              required
+              onChange={(e) => setNewLoan({ ...newLoan, id: e.target.value })}
+            />
+            <TextField
+              label="Type"
+              fullWidth
+              value={newLoan.type}
+              onChange={(e) => setNewLoan({ ...newLoan, type: e.target.value })}
+            />
+            <TextField
+              label="Duration"
+              fullWidth
+              value={newLoan.duration}
+              onChange={(e) =>
+                setNewLoan({ ...newLoan, duration: e.target.value })
+              }
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseAddModal} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleAddLoan} color="primary">
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Edit Loan Modal */}
+      <Dialog open={openEditModal} onClose={handleCloseEditModal}>
+        <DialogTitle>Edit Loan</DialogTitle>
+        
+        <DialogContent>
+          <Box display="flex" flexDirection="column" gap={2}>
+            <TextField
+              label="ID"
+              fullWidth
+              margin="dense"
+              value={selectedLoan ? selectedLoan.id : ''}
+              onChange={(e) =>
+                setSelectedLoan({ ...selectedLoan, id: e.target.value })
+              }
+            />
+            <TextField
+              label="Type"
+              fullWidth
+              value={selectedLoan ? selectedLoan.type : ''}
+              onChange={(e) =>
+                setSelectedLoan({ ...selectedLoan, type: e.target.value })
+              }
+            />
+            <TextField
+              label="Duration"
+              fullWidth
+              value={selectedLoan ? selectedLoan.duration : ''}
+              onChange={(e) =>
+                setSelectedLoan({ ...selectedLoan, duration: e.target.value })
+              }
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditModal} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleEditLoan} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+}
+
+export default Loans;
