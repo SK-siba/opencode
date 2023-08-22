@@ -1,16 +1,28 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Box } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   card: {
     marginBottom: '16px',
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+    borderRadius: '8px',
   },
   cardContent: {
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '16px',
   },
   actions: {
     display: 'flex',
@@ -19,6 +31,11 @@ const useStyles = makeStyles({
   },
   popupBox: {
     padding: '16px',
+  },
+  popupContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
   },
 });
 
@@ -64,27 +81,37 @@ const LoanCard = ({ loan, onDelete, onUpdate }) => {
   return (
     <Card className={classes.card}>
       <CardContent className={classes.cardContent}>
-        <p>{loan.name}</p>
-        <p>Amount: ${loan.amount}</p>
-        <p>Interest Rate: {loan.interestRate}%</p>
+        <Typography variant="h6" color="primary">
+          {loan.name}
+        </Typography>
+        <Typography variant="body1">Amount: ${loan.amount}</Typography>
+        <Typography variant="body1">Interest Rate: {loan.interestRate}%</Typography>
       </CardContent>
 
       <div className={classes.actions}>
-        <Button onClick={handleOpenDetails}>View</Button>
-        <Button onClick={handleOpenEdit}>Edit</Button>
-        <Button onClick={handleDelete}>Delete</Button>
+        <Button size="small" variant="outlined" onClick={handleOpenDetails}>
+          View Details
+        </Button>
+        <Button size="small" variant="outlined" onClick={handleOpenEdit}>
+          Edit
+        </Button>
+        <Button size="small" variant="outlined" onClick={handleDelete}>
+          Delete
+        </Button>
       </div>
 
       {/* View Details Popup */}
       <Dialog open={openDetails} onClose={handleCloseDetails}>
         <DialogTitle>Loan Details</DialogTitle>
         <DialogContent className={classes.popupBox}>
-          <Box>
-            <p>Name: {loan.name}</p>
-            <p>Amount: ${loan.amount}</p>
-            <p>Interest Rate: {loan.interestRate}%</p>
+          <div className={classes.popupContent}>
+            <Typography variant="h6" color="primary">
+              {loan.name}
+            </Typography>
+            <Typography variant="body1">Amount: ${loan.amount}</Typography>
+            <Typography variant="body1">Interest Rate: {loan.interestRate}%</Typography>
             {/* Add more details */}
-          </Box>
+          </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDetails}>Close</Button>
@@ -95,7 +122,14 @@ const LoanCard = ({ loan, onDelete, onUpdate }) => {
       <Dialog open={openEdit} onClose={handleCloseEdit}>
         <DialogTitle>Edit Loan</DialogTitle>
         <DialogContent>
-          <TextField label="Name" name="name" value={editedLoan.name} onChange={handleInputChange} />
+          <TextField
+            label="Name"
+            name="name"
+            value={editedLoan.name}
+            onChange={handleInputChange}
+            fullWidth
+            variant="outlined"
+          />
           {/* Add other fields for editing */}
         </DialogContent>
         <DialogActions>
