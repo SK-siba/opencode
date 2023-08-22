@@ -9,6 +9,8 @@ import {
   DialogActions,
   TextField,
   Typography,
+  Box,
+  Divider,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
@@ -84,6 +86,7 @@ const LoanCard = ({ loan, onDelete, onUpdate }) => {
         <Typography variant="h6" color="primary">
           {loan.name}
         </Typography>
+        <Divider />
         <Typography variant="body1">Amount: ${loan.amount}</Typography>
         <Typography variant="body1">Interest Rate: {loan.interestRate}%</Typography>
       </CardContent>
@@ -104,14 +107,15 @@ const LoanCard = ({ loan, onDelete, onUpdate }) => {
       <Dialog open={openDetails} onClose={handleCloseDetails}>
         <DialogTitle>Loan Details</DialogTitle>
         <DialogContent className={classes.popupBox}>
-          <div className={classes.popupContent}>
+          <Box className={classes.popupContent}>
             <Typography variant="h6" color="primary">
               {loan.name}
             </Typography>
+            <Divider />
             <Typography variant="body1">Amount: ${loan.amount}</Typography>
             <Typography variant="body1">Interest Rate: {loan.interestRate}%</Typography>
             {/* Add more details */}
-          </div>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDetails}>Close</Button>
@@ -122,15 +126,17 @@ const LoanCard = ({ loan, onDelete, onUpdate }) => {
       <Dialog open={openEdit} onClose={handleCloseEdit}>
         <DialogTitle>Edit Loan</DialogTitle>
         <DialogContent>
-          <TextField
-            label="Name"
-            name="name"
-            value={editedLoan.name}
-            onChange={handleInputChange}
-            fullWidth
-            variant="outlined"
-          />
-          {/* Add other fields for editing */}
+          <Box className={classes.popupContent}>
+            <TextField
+              label="Name"
+              name="name"
+              value={editedLoan.name}
+              onChange={handleInputChange}
+              fullWidth
+              variant="outlined"
+            />
+            {/* Add other fields for editing */}
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleUpdate}>Save</Button>
@@ -161,11 +167,11 @@ const Loans = () => {
   };
 
   return (
-    <div>
+    <Box>
       {loans.map((loan) => (
         <LoanCard key={loan.id} loan={loan} onDelete={handleDeleteLoan} onUpdate={handleUpdateLoan} />
       ))}
-    </div>
+    </Box>
   );
 };
 
