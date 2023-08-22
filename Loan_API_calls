@@ -22,14 +22,16 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import LoanService from './LoanService'; // Import the LoanService component
+
+// Assuming you have a LoanService component with addLoan, editLoan, deleteLoan, and getAllLoans methods
+import LoanService from './LoanService'; // Update this path as needed
 
 function Loans() {
   const [loans, setLoans] = useState([]);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null);
-  const [newLoan, setNewLoan] = useState({ id: '', type: '', duration: '' });
+  const [editedLoan, setEditedLoan] = useState({ loan_type: '', loan_duration: '' });
 
   useEffect(() => {
     async function fetchLoans() {
@@ -49,12 +51,12 @@ function Loans() {
 
   const handleCloseAddModal = () => {
     setOpenAddModal(false);
-    setNewLoan({ id: '', type: '', duration: '' });
+    setEditedLoan({ loan_type: '', loan_duration: '' });
   };
 
   const handleAddLoan = async () => {
     try {
-      const addedLoan = await LoanService.addLoan(newLoan);
+      const addedLoan = await LoanService.addLoan(editedLoan);
       setLoans([...loans, addedLoan]);
       handleCloseAddModal();
     } catch (error) {
@@ -64,9 +66,9 @@ function Loans() {
 
   const handleOpenEditModal = (loan) => {
     setSelectedLoan(loan);
+    setEditedLoan({ loan_type: loan.loan_type, loan_duration: loan.loan_duration });
     setOpenEditModal(true);
   };
-
   const handleCloseEditModal = () => {
     setSelectedLoan(null);
     setOpenEditModal(false);
@@ -74,9 +76,12 @@ function Loans() {
 
   const handleEditLoan = async () => {
     try {
-      const editedLoan = await LoanService.editLoan(selectedLoan);
+      const updatedLoan = await LoanService.editLoan(selectedLoan.loan_id, {
+        loan_type: editedLoan.loan_type,
+        loan_duration: editedLoan.loan_duration,
+      });
       const updatedLoans = loans.map((loan) =>
-        loan.id === editedLoan.id ? editedLoan : loan
+        loan.loan_id === updatedLoan.loan_id ? { ...loan, ...updatedLoan } : loan
       );
       setLoans(updatedLoans);
       handleCloseEditModal();
@@ -88,7 +93,7 @@ function Loans() {
   const handleDeleteLoan = async (loanId) => {
     try {
       await LoanService.deleteLoan(loanId);
-      const updatedLoans = loans.filter((loan) => loan.id !== loanId);
+      const updatedLoans = loans.filter((loan) => loan.loan_id !== loanId);
       setLoans(updatedLoans);
       // Show alert or notification
     } catch (error) {
@@ -116,10 +121,24 @@ function Loans() {
           </TableHead>
           <TableBody>
             {loans.map((loan) => (
-              <TableRow key={loan.id}>
-                <TableCell>{loan.id}</TableCell>
-                <TableCell>{loan.type}</TableCell>
-                <TableCell>{loan.duration}</TableCell>
+              <TableRow key={loan.loan_id}>
+                <TableCell>{loan.loan_id}</TableCell>
+                <TableCell>
+                  <TextField
+                    fullWidth
+                    margin="dense"
+                    value={loan.loan_id === selectedLoan?.loan_id ? editedLoan.loan_type : loan.loan_type}
+                    onChange={(e) => setEditedLoan({ ...editedLoan, loan_type: e.target.value })}
+                  />
+                </TableCell>
+                <TableCell>
+                  <TextField
+                    fullWidth
+                    margin="dense"
+                    value={loan.loan_id === selectedLoan?.loan_id ? editedLoan.loan_duration : loan.loan_duration}
+                    onChange={(e) => setEditedLoan({ ...editedLoan, loan_duration: e.target.value })}
+                  />
+                </TableCell>
                 <TableCell>
                   <Tooltip title="Edit">
                     <IconButton
@@ -132,7 +151,7 @@ function Loans() {
                   <Tooltip title="Delete">
                     <IconButton
                       color="secondary"
-                      onClick={() => handleDeleteLoan(loan.id)}
+                      onClick={() => handleDeleteLoan(loan.loan_id)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -142,7 +161,7 @@ function Loans() {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+            </TableContainer>
 
       {/* Add Loan Modal */}
       <Dialog open={openAddModal} onClose={handleCloseAddModal}>
@@ -150,27 +169,18 @@ function Loans() {
         <DialogContent>
           <Box display="flex" flexDirection="column" gap={2}>
             <TextField
-              label="ID"
-              fullWidth
-              margin="dense"
-              value={newLoan.id}
-              onChange={(e) => setNewLoan({ ...newLoan, id: e.target.value })}
-            />
-            <TextField
               label="Type"
               fullWidth
               margin="dense"
-              value={newLoan.type}
-              onChange={(e) => setNewLoan({ ...newLoan, type: e.target.value })}
+              value={editedLoan.loan_type}
+              onChange={(e) => setEditedLoan({ ...editedLoan, loan_type: e.target.value })}
             />
             <TextField
               label="Duration"
               fullWidth
               margin="dense"
-              value={newLoan.duration}
-              onChange={(e) =>
-                setNewLoan({ ...newLoan, duration: e.target.value })
-              }
+              value={editedLoan.loan_duration}
+              onChange={(e) => setEditedLoan({ ...editedLoan, loan_duration: e.target.value })}
             />
           </Box>
         </DialogContent>
@@ -193,28 +203,22 @@ function Loans() {
               label="ID"
               fullWidth
               margin="dense"
-              value={selectedLoan ? selectedLoan.id : ''}
-              onChange={(e) =>
-                setSelectedLoan({ ...selectedLoan, id: e.target.value })
-              }
+              value={selectedLoan?.loan_id || ''}
+              disabled
             />
             <TextField
               label="Type"
               fullWidth
               margin="dense"
-              value={selectedLoan ? selectedLoan.type : ''}
-              onChange={(e) =>
-                setSelectedLoan({ ...selectedLoan, type: e.target.value })
-              }
+              value={editedLoan.loan_type}
+              onChange={(e) => setEditedLoan({ ...editedLoan, loan_type: e.target.value })}
             />
             <TextField
               label="Duration"
               fullWidth
               margin="dense"
-              value={selectedLoan ? selectedLoan.duration : ''}
-              onChange={(e) =>
-                setSelectedLoan({ ...selectedLoan, duration: e.target.value })
-              }
+              value={editedLoan.loan_duration}
+              onChange={(e) => setEditedLoan({ ...editedLoan, loan_duration: e.target.value })}
             />
           </Box>
         </DialogContent>
@@ -232,3 +236,5 @@ function Loans() {
 }
 
 export default Loans;
+
+
