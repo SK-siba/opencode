@@ -5,10 +5,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   Fab,
-  IconButton,
   Paper,
   Table,
   TableBody,
@@ -19,9 +17,6 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 function Loans() {
   const [loans, setLoans] = useState([
@@ -31,7 +26,9 @@ function Loans() {
 
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null);
+  const [newLoan, setNewLoan] = useState({ id: '', type: '', duration: '' });
 
   const handleOpenAddModal = () => {
     setOpenAddModal(true);
@@ -39,9 +36,10 @@ function Loans() {
 
   const handleCloseAddModal = () => {
     setOpenAddModal(false);
+    setNewLoan({ id: '', type: '', duration: '' });
   };
 
-  const handleAddLoan = (newLoan) => {
+  const handleAddLoan = () => {
     setLoans([...loans, newLoan]);
     handleCloseAddModal();
   };
@@ -56,13 +54,37 @@ function Loans() {
     setOpenViewModal(false);
   };
 
+  const handleOpenEditModal = (loan) => {
+    setSelectedLoan(loan);
+    setOpenEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setSelectedLoan(null);
+    setOpenEditModal(false);
+  };
+
+  const handleEditLoan = () => {
+    const updatedLoans = loans.map((loan) =>
+      loan.id === selectedLoan.id ? { ...loan, ...selectedLoan } : loan
+    );
+    setLoans(updatedLoans);
+    handleCloseEditModal();
+  };
+
+  const handleDeleteLoan = (loanId) => {
+    const updatedLoans = loans.filter((loan) => loan.id !== loanId);
+    setLoans(updatedLoans);
+    alert('Loan deleted successfully');
+  };
+
   return (
     <Box m={3}>
       <Typography variant="h4" gutterBottom>
         Loans
       </Typography>
       <Fab color="primary" onClick={handleOpenAddModal} aria-label="add" size="small">
-        <AddIcon />
+        Add
       </Fab>
       <TableContainer component={Paper} style={{ marginTop: '20px' }}>
         <Table aria-label="loans table">
@@ -81,12 +103,15 @@ function Loans() {
                 <TableCell>{loan.type}</TableCell>
                 <TableCell>{loan.duration}</TableCell>
                 <TableCell>
-                  <IconButton color="primary" onClick={() => handleOpenViewModal(loan)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton color="secondary">
-                    <DeleteIcon />
-                  </IconButton>
+                  <Button color="primary" onClick={() => handleOpenViewModal(loan)}>
+                    View
+                  </Button>
+                  <Button color="primary" onClick={() => handleOpenEditModal(loan)}>
+                    Edit
+                  </Button>
+                  <Button color="secondary" onClick={() => handleDeleteLoan(loan.id)}>
+                    Delete
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -98,15 +123,30 @@ function Loans() {
       <Dialog open={openAddModal} onClose={handleCloseAddModal}>
         <DialogTitle>Add New Loan</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {/* Add form fields for new loan */}
-          </DialogContentText>
+          <TextField
+            label="ID"
+            fullWidth
+            value={newLoan.id}
+            onChange={(e) => setNewLoan({ ...newLoan, id: e.target.value })}
+          />
+          <TextField
+            label="Type"
+            fullWidth
+            value={newLoan.type}
+            onChange={(e) => setNewLoan({ ...newLoan, type: e.target.value })}
+          />
+          <TextField
+            label="Duration"
+            fullWidth
+            value={newLoan.duration}
+            onChange={(e) => setNewLoan({ ...newLoan, duration: e.target.value })}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseAddModal} color="primary">
             Cancel
           </Button>
-          <Button onClick={() => handleAddLoan(newLoanData)} color="primary">
+          <Button onClick={handleAddLoan} color="primary">
             Add
           </Button>
         </DialogActions>
@@ -116,13 +156,62 @@ function Loans() {
       <Dialog open={openViewModal} onClose={handleCloseViewModal}>
         <DialogTitle>Loan Details</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {/* Display selectedLoan details */}
-          </DialogContentText>
+          {/* Display selectedLoan details */}
+          {selectedLoan && (
+            <div>
+              <p>ID: {selectedLoan.id}</p>
+              <p>Type: {selectedLoan.type}</p>
+              <p>Duration: {selectedLoan.duration}</p>
+            </div>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseViewModal} color="primary">
             Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Edit Loan Modal */}
+      <Dialog open={openEditModal} onClose={handleCloseEditModal}>
+        <DialogTitle>Edit Loan</DialogTitle>
+        <DialogContent>
+          {/* Edit form fields for selectedLoan */}
+          {selectedLoan && (
+            <div>
+              <TextField
+                label="ID"
+                fullWidth
+                value={selectedLoan.id}
+                onChange={(e) =>
+                  setSelectedLoan({ ...selectedLoan, id: e.target.value })
+                }
+              />
+              <TextField
+                label="Type"
+                fullWidth
+                value={selectedLoan.type}
+                onChange={(e) =>
+                  setSelectedLoan({ ...selectedLoan, type: e.target.value })
+                }
+              />
+              <TextField
+                label="Duration"
+                fullWidth
+                value={selectedLoan.duration}
+                onChange={(e) =>
+                  setSelectedLoan({ ...selectedLoan, duration: e.target.value })
+                }
+              />
+            </div>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditModal} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleEditLoan} color="primary">
+            Save
           </Button>
         </DialogActions>
       </Dialog>
