@@ -16,7 +16,12 @@ import {
   TableRow,
   TextField,
   Typography,
+  IconButton,
+  Tooltip,
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function Loans() {
   const [loans, setLoans] = useState([
@@ -25,7 +30,6 @@ function Loans() {
   ]);
 
   const [openAddModal, setOpenAddModal] = useState(false);
-  const [openViewModal, setOpenViewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [selectedLoan, setSelectedLoan] = useState(null);
   const [newLoan, setNewLoan] = useState({ id: '', type: '', duration: '' });
@@ -42,16 +46,6 @@ function Loans() {
   const handleAddLoan = () => {
     setLoans([...loans, newLoan]);
     handleCloseAddModal();
-  };
-
-  const handleOpenViewModal = (loan) => {
-    setSelectedLoan(loan);
-    setOpenViewModal(true);
-  };
-
-  const handleCloseViewModal = () => {
-    setSelectedLoan(null);
-    setOpenViewModal(false);
   };
 
   const handleOpenEditModal = (loan) => {
@@ -84,7 +78,7 @@ function Loans() {
         Loans
       </Typography>
       <Fab color="primary" onClick={handleOpenAddModal} aria-label="add" size="small">
-        Add
+        <AddIcon />
       </Fab>
       <TableContainer component={Paper} style={{ marginTop: '20px' }}>
         <Table aria-label="loans table">
@@ -103,15 +97,22 @@ function Loans() {
                 <TableCell>{loan.type}</TableCell>
                 <TableCell>{loan.duration}</TableCell>
                 <TableCell>
-                  <Button color="primary" onClick={() => handleOpenViewModal(loan)}>
-                    View
-                  </Button>
-                  <Button color="primary" onClick={() => handleOpenEditModal(loan)}>
-                    Edit
-                  </Button>
-                  <Button color="secondary" onClick={() => handleDeleteLoan(loan.id)}>
-                    Delete
-                  </Button>
+                  <Tooltip title="Edit">
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleOpenEditModal(loan)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Delete">
+                    <IconButton
+                      color="secondary"
+                      onClick={() => handleDeleteLoan(loan.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
                 </TableCell>
               </TableRow>
             ))}
@@ -123,24 +124,28 @@ function Loans() {
       <Dialog open={openAddModal} onClose={handleCloseAddModal}>
         <DialogTitle>Add New Loan</DialogTitle>
         <DialogContent>
-          <TextField
-            label="ID"
-            fullWidth
-            value={newLoan.id}
-            onChange={(e) => setNewLoan({ ...newLoan, id: e.target.value })}
-          />
-          <TextField
-            label="Type"
-            fullWidth
-            value={newLoan.type}
-            onChange={(e) => setNewLoan({ ...newLoan, type: e.target.value })}
-          />
-          <TextField
-            label="Duration"
-            fullWidth
-            value={newLoan.duration}
-            onChange={(e) => setNewLoan({ ...newLoan, duration: e.target.value })}
-          />
+          <Box display="flex" flexDirection="column" gap={2}>
+            <TextField
+              label="ID"
+              fullWidth
+              value={newLoan.id}
+              onChange={(e) => setNewLoan({ ...newLoan, id: e.target.value })}
+            />
+            <TextField
+              label="Type"
+              fullWidth
+              value={newLoan.type}
+              onChange={(e) => setNewLoan({ ...newLoan, type: e.target.value })}
+            />
+            <TextField
+              label="Duration"
+              fullWidth
+              value={newLoan.duration}
+              onChange={(e) =>
+                setNewLoan({ ...newLoan, duration: e.target.value })
+              }
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseAddModal} color="primary">
@@ -152,57 +157,36 @@ function Loans() {
         </DialogActions>
       </Dialog>
 
-      {/* View Loan Modal */}
-      <Dialog open={openViewModal} onClose={handleCloseViewModal}>
-        <DialogTitle>Loan Details</DialogTitle>
-        <DialogContent>
-          {selectedLoan && (
-            <div>
-              <p>ID: {selectedLoan.id}</p>
-              <p>Type: {selectedLoan.type}</p>
-              <p>Duration: {selectedLoan.duration}</p>
-            </div>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseViewModal} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-
       {/* Edit Loan Modal */}
       <Dialog open={openEditModal} onClose={handleCloseEditModal}>
         <DialogTitle>Edit Loan</DialogTitle>
         <DialogContent>
-          {selectedLoan && (
-            <div>
-              <TextField
-                label="ID"
-                fullWidth
-                value={selectedLoan.id}
-                onChange={(e) =>
-                  setSelectedLoan({ ...selectedLoan, id: e.target.value })
-                }
-              />
-              <TextField
-                label="Type"
-                fullWidth
-                value={selectedLoan.type}
-                onChange={(e) =>
-                  setSelectedLoan({ ...selectedLoan, type: e.target.value })
-                }
-              />
-              <TextField
-                label="Duration"
-                fullWidth
-                value={selectedLoan.duration}
-                onChange={(e) =>
-                  setSelectedLoan({ ...selectedLoan, duration: e.target.value })
-                }
-              />
-            </div>
-          )}
+          <Box display="flex" flexDirection="column" gap={2}>
+            <TextField
+              label="ID"
+              fullWidth
+              value={selectedLoan ? selectedLoan.id : ''}
+              onChange={(e) =>
+                setSelectedLoan({ ...selectedLoan, id: e.target.value })
+              }
+            />
+            <TextField
+              label="Type"
+              fullWidth
+              value={selectedLoan ? selectedLoan.type : ''}
+              onChange={(e) =>
+                setSelectedLoan({ ...selectedLoan, type: e.target.value })
+              }
+            />
+            <TextField
+              label="Duration"
+              fullWidth
+              value={selectedLoan ? selectedLoan.duration : ''}
+              onChange={(e) =>
+                setSelectedLoan({ ...selectedLoan, duration: e.target.value })
+              }
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseEditModal} color="primary">
