@@ -1,0 +1,37 @@
+const handleDurationChange = (changeAmount) => {
+  const newDuration = parseInt(editedLoan.loan_duration) + changeAmount;
+  if (!isNaN(newDuration) && newDuration >= 2) {
+    setEditedLoan({ ...editedLoan, loan_duration: newDuration.toString() });
+  }
+};
+
+
+<TextField
+  label="Duration"
+  fullWidth
+  margin="dense"
+  value={editedLoan.loan_duration}
+  onChange={(e) => setEditedLoan({ ...editedLoan, loan_duration: e.target.value })}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton
+          aria-label="decrease duration"
+          onClick={() => handleDurationChange(-1)}
+        >
+          <RemoveIcon />
+        </IconButton>
+        <Typography variant="body1" component="span">
+          {editedLoan.loan_duration}
+        </Typography>
+        <IconButton
+          aria-label="increase duration"
+          onClick={() => handleDurationChange(1)}
+        >
+          <AddIcon />
+        </IconButton>
+      </InputAdornment>
+    ),
+  }}
+/>
+
