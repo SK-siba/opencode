@@ -1,37 +1,46 @@
-const handleDurationChange = (changeAmount) => {
-  const newDuration = parseInt(editedLoan.loan_duration) + changeAmount;
-  if (!isNaN(newDuration) && newDuration >= 2) {
-    setEditedLoan({ ...editedLoan, loan_duration: newDuration.toString() });
-  }
+import React, { useState } from 'react';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+
+const LoanComponent = () => {
+  const [loanDuration, setLoanDuration] = useState(2);
+
+  const handleDecreaseDuration = () => {
+    if (loanDuration > 2) {
+      setLoanDuration(loanDuration - 1);
+    }
+  };
+
+  const handleIncreaseDuration = () => {
+    setLoanDuration(loanDuration + 1);
+  };
+
+  return (
+    <Box display="flex" alignItems="center">
+      <Button
+        variant="outlined"
+        onClick={handleDecreaseDuration}
+        sx={{ minWidth: '40px', height: '40px', fontSize: '1.5rem' }}
+      >
+        -
+      </Button>
+      <Typography
+        variant="h5"
+        component="span"
+        sx={{ margin: '0 20px', fontSize: '1.5rem', fontWeight: 'bold' }}
+      >
+        {loanDuration}
+      </Typography>
+      <Button
+        variant="outlined"
+        onClick={handleIncreaseDuration}
+        sx={{ minWidth: '40px', height: '40px', fontSize: '1.5rem' }}
+      >
+        +
+      </Button>
+    </Box>
+  );
 };
 
-
-<TextField
-  label="Duration"
-  fullWidth
-  margin="dense"
-  value={editedLoan.loan_duration}
-  onChange={(e) => setEditedLoan({ ...editedLoan, loan_duration: e.target.value })}
-  InputProps={{
-    endAdornment: (
-      <InputAdornment position="end">
-        <IconButton
-          aria-label="decrease duration"
-          onClick={() => handleDurationChange(-1)}
-        >
-          <RemoveIcon />
-        </IconButton>
-        <Typography variant="body1" component="span">
-          {editedLoan.loan_duration}
-        </Typography>
-        <IconButton
-          aria-label="increase duration"
-          onClick={() => handleDurationChange(1)}
-        >
-          <AddIcon />
-        </IconButton>
-      </InputAdornment>
-    ),
-  }}
-/>
-
+export default LoanComponent;
